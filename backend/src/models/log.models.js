@@ -1,55 +1,28 @@
 import mongoose, { Schema } from "mongoose";
 
-const logSchema = new Schema(
-    {
-        logLevel: {
-            type: String,
-            enum: ["INFO", "DEBUG", "WARN", "ERROR", "FATAL"],
-            required: true
-        },
-        source: {
-            type: String,
-            required: true
-        },
-        message: {
-            type: String,
-            required: true
-        },
-        userId: {
-            type: String,
-            required: false, // Optional field
-            },
-        ipAddress: {
-            type: String,
-            required: false, // Optional field
-        },
-        requestId: {
-            type: String,
-            required: false, // Optional field
-        },
-        context: {
-            type: Object,
-            required: false, // Optional field
-        },
-        stackTrace: {
-            type: String,
-            required: false, // Optional field
-        },
-        environment: {
-            type: String,
-            required: true,
-        },
-        serviceVersion: {
-            type: String,
-            required: false, // Optional field
-        },
-        metrics: {
-            type: Object,
-            required: false, // Optional field
-        },
+const logSchema = new Schema({
+    timestamp: {
+        type: Date,
+        required: true, // Capture the exact time the log was created
+        default: Date.now // Automatically set to current time if not provided
     },
-
-    { timestamps: true }
-);
+    logLevel: {
+        type: String,
+        enum: ["INFO", "DEBUG", "WARN", "ERROR", "FATAL"],
+        required: true // Essential for categorizing log severity
+    },
+    source: {
+        type: String,
+        required: true // Indicates the source of the log (app name or service)
+    },
+    message: {
+        type: String,
+        required: true // The actual log message describing the event
+    },
+    environment: {
+        type: String,
+        required: true, // To distinguish logs from different environments (e.g., production, staging)
+    }
+});
 
 export const LOG = mongoose.model("LOG", logSchema);
